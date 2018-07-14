@@ -6,23 +6,22 @@ type FrameProps = {
 }
 
 const VideoContainer = styled.div`
-    padding-top: 50px;
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
+    /* display: flex; */
+    /* justify-content: center; */
+    /* flex-direction: column; */
+    /* align-items: center; */
 `
 
-const VideoDiv = styled.div`
-    flex-grow: 1;
+const V = styled.video`
+    align-items: center;
+    /* padding: 50px; */
 `
 
 export class Video extends React.Component<FrameProps, {}> {
     render() {
-        let url = `api/video/getVideoContent?file=${this.props.video}`
+        let url = `api/video/getVideoContent?file=${encodeURI(this.props.video)}`
         return (
-            <VideoContainer>
-                <video src={url}> </video>
-            </VideoContainer>
+            <V src={url} autoPlay> </V>
         )
     }
 }

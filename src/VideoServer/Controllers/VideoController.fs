@@ -22,7 +22,11 @@ type VideoController() =
 
     [<HttpGet>]
     member this.GetVideoContent(file: string) =
-        let files = DirectoryInfo(".").GetFiles(file, SearchOption.AllDirectories)
+        let u = System.Net.WebUtility.UrlDecode(file)
+        printfn "-- %A" file
+        printfn "-- %A" u
+
+        let files = DirectoryInfo(".").GetFiles(u, SearchOption.AllDirectories)
         let video = files |> Array.tryHead
 
         match video with

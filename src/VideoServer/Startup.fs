@@ -10,6 +10,8 @@ open Microsoft.AspNetCore.HttpsPolicy;
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
+open System.Reflection
+open Microsoft.Extensions.FileProviders
 
 type Startup private () =
     new (configuration: IConfiguration) as this =
@@ -25,8 +27,22 @@ type Startup private () =
         else
             app.UseHsts() |> ignore
 
+        let asm = Assembly.GetEntryAssembly()
+        let asmName = asm.GetName().Name
+
+        let defaultOptions = DefaultFilesOptions()
+        defaultOptions.DefaultFileNames.Clear()
+        defaultOptions.DefaultFileNames.Add("index.html")
+        defaultOptions.FileProvider <- new EmbeddedFileProvider(asm, sprintf "%s.wwwroot" asmName)
+
+        let staticOptions = StaticFileOptions()
+        staticOptions.FileProvider <- new EmbeddedFileProvider(asm, sprintf "%s.wwwroot" asmName)
+
         app
-            .UseStaticFiles()
+            // .UseDefaultFiles()
+            // .UseStaticFiles()
+            .UseDefaultFiles(defaultOptions)
+            .UseStaticFiles(staticOptions)
             .UseMvc() |> ignore
 
     member val Configuration : IConfiguration = null with get, set
