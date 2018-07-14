@@ -1,4 +1,4 @@
-﻿namespace VideoServer.Controllers
+namespace VideoServer.Controllers
 
 open System
 open System.Collections.Generic
