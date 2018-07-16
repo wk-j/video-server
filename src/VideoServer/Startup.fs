@@ -12,6 +12,9 @@ open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open System.Reflection
 open Microsoft.Extensions.FileProviders
+open System.Diagnostics
+open System.IO
+open VideoServer.Finder
 
 type Startup private () =
     new (configuration: IConfiguration) as this =
@@ -19,7 +22,14 @@ type Startup private () =
         this.Configuration <- configuration
 
     member __.ConfigureServices(services: IServiceCollection) =
-        services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1) |> ignore
+        let youtubeUrls = UrlFinder.FindYoutubeUrls(".")
+        let videoUrls = youtubeUrls |> Array.map UrlFinder.ConvertToVideoUrl
+        let data = { Urls = videoUrls }
+
+        services
+            .AddSingleton<InitialData>(data)
+            .AddMvc()
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1) |> ignore
 
     member __.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
         if (env.IsDevelopment()) then

@@ -2,29 +2,30 @@ namespace VideoServer.Controllers
 
 open System.IO
 open Microsoft.AspNetCore.Mvc
+open VideoServer.Finder
 
 type FileInfo = {
-    Name: string
+    Url: string
 }
 
 [<Route("api/[controller]/[action]")>]
-type VideoController() =
+type VideoController(init: InitialData) =
     inherit ControllerBase()
 
     [<HttpGet>]
     member __.GetVideos() =
-        let dir = new DirectoryInfo(".")
-        let files = dir.GetFiles("*.mp4", SearchOption.AllDirectories)
 
-        files |> Array.map(fun x ->
-         { Name = x.Name }
-        )
+        let localVideos =
+            DirectoryInfo(".").GetFiles("*.mp4",  SearchOption.AllDirectories)
+            |> Array.map(fun x ->
+                sprintf "/api/video/getVideoContent?file=%s" (System.Net.WebUtility.UrlEncode x.Name)
+            )
+
+        Array.append init.Urls localVideos
 
     [<HttpGet>]
     member this.GetVideoContent(file: string) =
         let u = System.Net.WebUtility.UrlDecode(file)
-        printfn "-- %A" file
-        printfn "-- %A" u
 
         let files = DirectoryInfo(".").GetFiles(u, SearchOption.AllDirectories)
         let video = files |> Array.tryHead
@@ -37,4 +38,3 @@ type VideoController() =
                 :> IActionResult
         | None  ->
             this.BadRequest() :> IActionResult
-

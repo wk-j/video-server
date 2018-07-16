@@ -19,7 +19,8 @@ const V = styled.video`
 
 export class Video extends React.Component<FrameProps, {}> {
     render() {
-        let url = `api/video/getVideoContent?file=${encodeURI(this.props.video)}`
+        //let url = `api/video/getVideoContent?file=${encodeURI(this.props.video)}`
+        let url = `${this.props.video}`
         return (
             <V src={url} autoPlay> </V>
         )

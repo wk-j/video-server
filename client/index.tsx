@@ -7,7 +7,7 @@ import { getVideos } from "./Api"
 import "./Style.css"
 
 type AppState = {
-    videos: { name: string }[]
+    videos: string[]
     currentVideo: string
 }
 
@@ -41,9 +41,9 @@ class App extends React.Component<{}, AppState> {
     next = (e) => {
         var current = this.state.currentVideo
         var videos = this.state.videos
-        var index = videos.findIndex(x => x.name === current)
+        var index = videos.findIndex(x => x === current)
         var newIndex = (index + 1) % videos.length
-        var newVideo = videos[newIndex].name
+        var newVideo = videos[newIndex]
         this.setState({
             currentVideo: newVideo
         })
@@ -56,7 +56,7 @@ class App extends React.Component<{}, AppState> {
             var videos = data.data;
             this.setState({
                 videos: videos,
-                currentVideo: data.data.length > 0 ? videos[0].name : ""
+                currentVideo: data.data.length > 0 ? videos[0] : ""
             })
         })
     }
