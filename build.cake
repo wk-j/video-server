@@ -40,6 +40,7 @@ Task("Install")
 
 Task("Build").Does(() => {
     PS.StartProcess($"parcel build --no-cache -d src/{name}/wwwroot/ --public-url / client/index.html");
+    PS.StartProcess($"parcel build --no-cache -d src/{name}/wwwroot/ --public-url / vscode/vscode.html");
 });
 
 Task("Start").Does(() => {

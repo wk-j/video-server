@@ -1,10 +1,16 @@
 import { hubConnection } from "./hub"
-import React from "react"
+import React, { CSSProperties } from "react"
 import ReactDom from "react-dom"
 
 type State = {
     image: string
 }
+
+const style = {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center"
+} as CSSProperties
 
 export class App extends React.Component<{}, State> {
     constructor(props) {
@@ -18,14 +24,18 @@ export class App extends React.Component<{}, State> {
                 this.setState({ image: url })
             }
         });
-
     }
 
     render() {
         return (
-            <div>
+            <div style={style}>
                 <img src={this.state.image} />
-                {/* <div style={{ backgroundSize: "cover", width: "500px", height: "500px", backgroundImage: `url(${this.state.image})` }}>A</div> */}
+                <img src={this.state.image} />
+                <img src={this.state.image} />
+                <img src={this.state.image} />
+                <img src={this.state.image} />
+                <img src={this.state.image} />
+                <img src={this.state.image} />
             </div>
         )
     }
