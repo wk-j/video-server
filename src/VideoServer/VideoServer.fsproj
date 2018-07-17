@@ -10,6 +10,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Watch Include="**/*.fs" Exclude="**/wwwroot/*;node_modules/**/*.js;**/*.js;**/*.html;**/*.tsx" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Compile Include="Finder.fs" />
         <Compile Include="Controllers/VideoController.fs" />
         <Compile Include="Controllers/ValuesController.fs" />

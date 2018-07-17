@@ -44,7 +44,7 @@ Task("Build").Does(() => {
 });
 
 Task("Start").Does(() => {
-    PS.StartProcess($"parcel --no-cache -d src/{name}/wwwroot/ --public-url / client/index.html");
+    PS.StartProcess($"parcel watch --no-cache -d src/{name}/wwwroot/ --public-url / client/index.html");
 });
 
 var target = Argument("target", "Start");
