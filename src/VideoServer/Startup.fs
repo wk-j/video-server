@@ -15,6 +15,8 @@ open Microsoft.Extensions.FileProviders
 open System.Diagnostics
 open System.IO
 open VideoServer.Finder
+open Hubs
+open Microsoft.AspNetCore.Http
 
 type Startup private () =
     new (configuration: IConfiguration) as this =
@@ -26,6 +28,18 @@ type Startup private () =
         let videoUrls = youtubeUrls |> Array.map UrlFinder.ConvertToVideoUrl
         let data = { Urls = videoUrls }
 
+
+        services.AddCors(fun options ->
+            options.AddPolicy("CorsPolicy", fun builder ->
+                builder.AllowAnyHeader() |> ignore
+                builder.AllowAnyMethod() |> ignore
+                builder.AllowAnyOrigin() |> ignore
+                builder.AllowCredentials() |> ignore
+            ) |> ignore
+        ) |> ignore
+
+        services.AddSignalR() |> ignore
+
         services
             .AddSingleton<InitialData>(data)
             .AddMvc()
@@ -36,6 +50,19 @@ type Startup private () =
             app.UseDeveloperExceptionPage() |> ignore
         else
             app.UseHsts() |> ignore
+
+        app.UseCors("CorsPolicy") |> ignore
+        app.UseSignalR(fun builder ->
+            builder.MapHub<VideoHub>("/videoHub" |> PathString)
+        ) |> ignore
+
+
+        // app.UseCors(fun config ->
+        //     config.AllowAnyHeader() |> ignore
+        //     config.AllowAnyMethod.antm () |> ignore
+        //     config.AllowAnyOrigin() |> ignore
+        //     config.AllowCredentials() |>ignore
+        // ) |> ignore
 
         if (env.IsDevelopment()) then
             printfn "Env = Development"

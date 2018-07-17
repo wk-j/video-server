@@ -39,12 +39,15 @@ Task("Install")
     });
 
 Task("Build").Does(() => {
-    // PS.StartProcess($"parcel --no-cache -d src/{name}/wwwroot/ --public-url / client/index.html");
     PS.StartProcess($"parcel build --no-cache -d src/{name}/wwwroot/ --public-url / client/index.html");
 });
 
 Task("Start").Does(() => {
     PS.StartProcess($"parcel watch --no-cache -d src/{name}/wwwroot/ --public-url / client/index.html");
+});
+
+Task("Start-Code").Does(() => {
+    PS.StartProcess($"parcel --no-cache -d src/{name}/wwwroot/ --public-url / vscode/vscode.html");
 });
 
 var target = Argument("target", "Start");

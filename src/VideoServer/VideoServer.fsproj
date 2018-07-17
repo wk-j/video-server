@@ -15,6 +15,7 @@
 
     <ItemGroup>
         <Compile Include="Finder.fs" />
+        <Compile Include="Hubs/VideoHub.fs" />
         <Compile Include="Controllers/VideoController.fs" />
         <Compile Include="Controllers/ValuesController.fs" />
         <Compile Include="Startup.fs" />

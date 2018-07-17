@@ -16,6 +16,9 @@ module Program =
     let CreateWebHostBuilder args =
         WebHost
             .CreateDefaultBuilder(args)
+            .ConfigureLogging(fun builder ->
+                builder.ClearProviders() |> ignore
+            )
             .UseUrls("http://*:9999")
             .UseStartup<Startup>();
 

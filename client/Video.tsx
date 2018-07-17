@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import React, { RefObject } from "react"
+import { newImage } from "./Api";
 
 type FrameProps = {
     video: string
@@ -17,6 +18,13 @@ const V = styled.video`
     /* padding: 50px; */
 `
 
+const VideoDiv = styled.div`
+    align-items: center;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+`
+
 type VideoState = {
     videoRef?: HTMLVideoElement
     canvasRef?: HTMLCanvasElement
@@ -29,10 +37,9 @@ export class Video extends React.Component<FrameProps, VideoState> {
         this.state = {
             currentImage: "https://avatars2.githubusercontent.com/u/860704?s=460&v=4"
         }
-
         setInterval(() => {
             this.generateImage();
-        }, 10)
+        }, 50)
     }
 
     onDurationChange = (e) => { }
@@ -55,25 +62,22 @@ export class Video extends React.Component<FrameProps, VideoState> {
         var video = this.state.videoRef
 
         var context = canvas.getContext('2d');
-        context.drawImage(video, 0, 0, 220, 150);
-        var dataURL = canvas.toDataURL();
+        context.drawImage(video, 0, 0, video.videoWidth / 5, video.videoHeight / 5)
 
-        this.setState({
-            currentImage: dataURL
-        })
+        var dataURL = canvas.toDataURL();
+        newImage(dataURL)
     }
 
     render() {
         let url = `${this.props.video}`
         return (
-            <div>
+            <VideoDiv>
                 <canvas ref={this.updateCanvasRef}></canvas>
                 <video controls onDurationChange={this.onDurationChange}
                     ref={this.updateVideoRef}
                     onTimeUpdate={this.onTimeUpdate}
                     src={url} autoPlay> </video>
-                <img src="" />
-            </div>
+            </VideoDiv>
         )
     }
 }

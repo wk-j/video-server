@@ -3,14 +3,31 @@ namespace VideoServer.Controllers
 open System.IO
 open Microsoft.AspNetCore.Mvc
 open VideoServer.Finder
+open Microsoft.AspNetCore.SignalR
+open VideoServer.Hubs
 
 type FileInfo = {
     Url: string
 }
 
+[<CLIMutable>]
+type NewImageRequest = {
+    Image: string
+}
+
+type Result = {
+    Success:bool
+}
+
 [<Route("api/[controller]/[action]")>]
-type VideoController(init: InitialData) =
+type VideoController(init: InitialData, hub: IHubContext<VideoHub>) =
+
     inherit ControllerBase()
+
+    [<HttpPost>]
+    member __.NewImage([<FromBody>]request: NewImageRequest) =
+        HubFunctions.NewImage(hub.Clients, request.Image) |> ignore
+        { Success = true }
 
     [<HttpGet>]
     member __.GetVideos() =
