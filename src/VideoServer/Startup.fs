@@ -37,22 +37,26 @@ type Startup private () =
         else
             app.UseHsts() |> ignore
 
-        let asm = Assembly.GetEntryAssembly()
-        let asmName = asm.GetName().Name
+        if (env.IsDevelopment()) then
+            printfn "Env = Development"
+            app .UseDefaultFiles()
+                .UseStaticFiles()
+                .UseMvc() |> ignore
+        else
+            printfn "Env = Production"
+            let asm = Assembly.GetEntryAssembly()
+            let asmName = asm.GetName().Name
 
-        let defaultOptions = DefaultFilesOptions()
-        defaultOptions.DefaultFileNames.Clear()
-        defaultOptions.DefaultFileNames.Add("index.html")
-        defaultOptions.FileProvider <- new EmbeddedFileProvider(asm, sprintf "%s.wwwroot" asmName)
+            let defaultOptions = DefaultFilesOptions()
+            defaultOptions.DefaultFileNames.Clear()
+            defaultOptions.DefaultFileNames.Add("index.html")
+            defaultOptions.FileProvider <- new EmbeddedFileProvider(asm, sprintf "%s.wwwroot" asmName)
 
-        let staticOptions = StaticFileOptions()
-        staticOptions.FileProvider <- new EmbeddedFileProvider(asm, sprintf "%s.wwwroot" asmName)
+            let staticOptions = StaticFileOptions()
+            staticOptions.FileProvider <- new EmbeddedFileProvider(asm, sprintf "%s.wwwroot" asmName)
 
-        app
-            // .UseDefaultFiles()
-            // .UseStaticFiles()
-            .UseDefaultFiles(defaultOptions)
-            .UseStaticFiles(staticOptions)
-            .UseMvc() |> ignore
+            app .UseDefaultFiles(defaultOptions)
+                .UseStaticFiles(staticOptions)
+                .UseMvc() |> ignore
 
     member val Configuration : IConfiguration = null with get, set
