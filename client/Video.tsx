@@ -2,10 +2,6 @@ import styled from "styled-components";
 import React, { RefObject } from "react"
 import { newImage } from "./Api";
 
-type FrameProps = {
-    video: string
-}
-
 const VideoContainer = styled.div`
     /* display: flex; */
     /* justify-content: center; */
@@ -25,20 +21,26 @@ const VideoDiv = styled.div`
     justify-content: center;
 `
 
+type FrameProps = {
+    video: string
+}
+
 type VideoState = {
     videoRef?: HTMLVideoElement
     canvasRef?: HTMLCanvasElement
-    currentImage: string
+    playing: boolean
 }
 
 export class Video extends React.Component<FrameProps, VideoState> {
     constructor(props) {
         super(props)
         this.state = {
-            currentImage: "https://avatars2.githubusercontent.com/u/860704?s=460&v=4"
+            playing: false
         }
         setInterval(() => {
-            this.generateImage();
+            if (this.state.playing) {
+                this.generateImage();
+            }
         }, 50)
     }
 
@@ -68,12 +70,24 @@ export class Video extends React.Component<FrameProps, VideoState> {
         newImage(dataURL)
     }
 
+    onPlaying = (e) => {
+        this.setState({
+            playing: true
+        })
+    }
+
+    onPause = (e) => {
+        this.setState({
+            playing: false
+        })
+    }
+
     render() {
         let url = `${this.props.video}`
         return (
             <VideoDiv>
                 <canvas ref={this.updateCanvasRef}></canvas>
-                <video controls onDurationChange={this.onDurationChange}
+                <video onPause={this.onPause} onPlaying={this.onPlaying} controls onDurationChange={this.onDurationChange}
                     ref={this.updateVideoRef}
                     onTimeUpdate={this.onTimeUpdate}
                     src={url} autoPlay> </video>
