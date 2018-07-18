@@ -1,7 +1,7 @@
 import * as signalR from "@aspnet/signalr"
 
 export const hubConnection = new signalR.HubConnectionBuilder()
-    .withUrl(`http://localhost:9999/videoHub`)
+    .withUrl(`/videoHub`)
     .configureLogging(signalR.LogLevel.Information)
     .build()
 
